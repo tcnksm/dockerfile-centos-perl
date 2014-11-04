@@ -1,16 +1,11 @@
-FROM buildpack-deps
-MAINTAINER Peter Martini <PeterCMartini@GMail.com>
-
-RUN apt-get update && apt-get install -y curl procps
+FROM tcnksm/centos-buildpack-deps:6
 
 RUN mkdir /usr/src/perl
 WORKDIR /usr/src/perl
 
-COPY sha1.txt /tmp/sha1.txt
 RUN curl -SL https://cpan.metacpan.org/authors/id/S/SH/SHAY/perl-5.20.1.tar.bz2 -o perl-5.20.1.tar.bz2 \
-    && sha1sum -c /tmp/sha1.txt \
     && tar --strip-components=1 -xjf perl-5.20.1.tar.bz2 -C /usr/src/perl \
-    && rm perl-5.20.1.tar.bz2 /tmp/sha1.txt
+    && rm perl-5.20.1.tar.bz2
 
 RUN ./Configure -Dusethreads -Duse64bitall  -des \
         && make -j$(nproc) \
